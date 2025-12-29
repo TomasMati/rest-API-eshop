@@ -185,4 +185,21 @@ public class DTOMapper {
         item.setImage(dto.getImage());
         return item;
     }
+    // --- User Mappings ---
+
+    public com.eshop.dto.UserDTO toUserDTO(com.eshop.entity.User user) {
+        if (user == null) {
+            return null;
+        }
+        com.eshop.dto.UserDTO dto = new com.eshop.dto.UserDTO();
+        dto.setId(user.getId());
+        dto.setName(user.getName());
+        dto.setEmail(user.getEmail());
+        dto.setRole(user.getRole());
+        dto.setStreet(user.getStreet());
+        dto.setCity(user.getCity());
+        dto.setZip(user.getZip());
+        dto.setCountry(user.getCountry());
+        return dto;
+    }
 }

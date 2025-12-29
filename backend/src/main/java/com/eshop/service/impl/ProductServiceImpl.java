@@ -6,25 +6,29 @@ import com.eshop.repository.ProductRepository;
 import com.eshop.repository.ReviewRepository;
 import com.eshop.repository.UserRepository;
 import com.eshop.service.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.eshop.dto.ProductDTO;
+import com.eshop.mapper.DTOMapper;
+import com.eshop.service.FileStorageService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
+import java.util.ArrayList;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
 
-    @Autowired
-    private ProductRepository productRepository;
-
-    @Autowired
-    private ReviewRepository reviewRepository;
-
-    @Autowired
-    private UserRepository userRepository;
+    private final ProductRepository productRepository;
+    private final ReviewRepository reviewRepository;
+    private final UserRepository userRepository;
+    private final FileStorageService fileStorageService;
+    private final DTOMapper dtoMapper;
 
     @Override
     public List<Product> getAllProducts() {
@@ -38,7 +42,19 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product createProduct(Product product) {
+    public Product createProduct(ProductDTO productDTO, MultipartFile[] images) {
+        if (images != null && images.length > 0) {
+            if (productDTO.getImages() == null) {
+                productDTO.setImages(new ArrayList<>());
+            }
+            for (MultipartFile image : images) {
+                String imagePath = fileStorageService.storeFile(image);
+                productDTO.getImages().add(imagePath);
+            }
+        }
+
+        Product product = dtoMapper.toProductEntity(productDTO);
+
         if (product.getCatalogNumber() != null && productRepository.existsByCatalogNumber(product.getCatalogNumber())) {
             throw new IllegalArgumentException(
                     "Product with catalog number " + product.getCatalogNumber() + " already exists.");
@@ -47,8 +63,20 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product updateProduct(Long id, Product productDetails) {
-        Product product = getProductById(id);
+    public Product updateProduct(Long id, ProductDTO productDTO, MultipartFile[] images) {
+        Product existingProduct = getProductById(id);
+
+        if (images != null && images.length > 0) {
+            if (productDTO.getImages() == null) {
+                productDTO.setImages(new ArrayList<>());
+            }
+            for (MultipartFile image : images) {
+                String imagePath = fileStorageService.storeFile(image);
+                productDTO.getImages().add(imagePath);
+            }
+        }
+
+        Product productDetails = dtoMapper.toProductEntity(productDTO);
 
         if (productDetails.getCatalogNumber() != null &&
                 productRepository.existsByCatalogNumberAndIdNot(productDetails.getCatalogNumber(), id)) {
@@ -56,28 +84,28 @@ public class ProductServiceImpl implements ProductService {
                     "Product with catalog number " + productDetails.getCatalogNumber() + " already exists.");
         }
 
-        product.setName(productDetails.getName());
-        product.setPrice(productDetails.getPrice());
-        product.setDescription(productDetails.getDescription());
-        product.setCategory(productDetails.getCategory());
-        product.setSubcategory(productDetails.getSubcategory());
+        existingProduct.setName(productDetails.getName());
+        existingProduct.setPrice(productDetails.getPrice());
+        existingProduct.setDescription(productDetails.getDescription());
+        existingProduct.setCategory(productDetails.getCategory());
+        existingProduct.setSubcategory(productDetails.getSubcategory());
 
         if (productDetails.getImages() != null) {
-            product.setImages(productDetails.getImages());
+            existingProduct.setImages(productDetails.getImages());
         }
 
         if (productDetails.getCatalogNumber() != null) {
-            product.setCatalogNumber(productDetails.getCatalogNumber());
+            existingProduct.setCatalogNumber(productDetails.getCatalogNumber());
         }
 
         if (productDetails.getAvailability() != null) {
-            product.setAvailability(productDetails.getAvailability());
+            existingProduct.setAvailability(productDetails.getAvailability());
         }
 
-        product.setRating(productDetails.getRating());
-        product.setReviewCount(productDetails.getReviewCount());
+        existingProduct.setRating(productDetails.getRating());
+        existingProduct.setReviewCount(productDetails.getReviewCount());
 
-        return productRepository.save(product);
+        return productRepository.save(existingProduct);
     }
 
     @Override

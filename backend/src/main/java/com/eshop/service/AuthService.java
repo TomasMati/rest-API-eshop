@@ -7,36 +7,26 @@ import com.eshop.dto.UserDTO;
 import com.eshop.entity.User;
 import com.eshop.repository.UserRepository;
 import com.eshop.security.JwtUtil;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class AuthService {
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private JwtUtil jwtUtil;
-
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private CustomUserDetailsService userDetailsService;
-
-    @Autowired
-    private EmailService emailService;
-
-    @Autowired
-    private SmsService smsService;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
+    private final AuthenticationManager authenticationManager;
+    private final CustomUserDetailsService userDetailsService;
+    private final EmailService emailService;
+    private final SmsService smsService;
+    private final com.eshop.mapper.DTOMapper dtoMapper;
 
     public AuthResponse register(RegisterRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
@@ -63,7 +53,7 @@ public class AuthService {
         UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
         String token = jwtUtil.generateToken(userDetails);
 
-        return new AuthResponse(token, convertToDTO(user));
+        return new AuthResponse(token, dtoMapper.toUserDTO(user));
     }
 
     public AuthResponse login(LoginRequest request) {
@@ -76,25 +66,13 @@ public class AuthService {
         UserDetails userDetails = userDetailsService.loadUserByUsername(request.getEmail());
         String token = jwtUtil.generateToken(userDetails);
 
-        return new AuthResponse(token, convertToDTO(user));
+        return new AuthResponse(token, dtoMapper.toUserDTO(user));
     }
 
     public UserDTO getCurrentUser(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        return convertToDTO(user);
+        return dtoMapper.toUserDTO(user);
     }
 
-    private UserDTO convertToDTO(User user) {
-        UserDTO dto = new UserDTO();
-        dto.setId(user.getId());
-        dto.setName(user.getName());
-        dto.setEmail(user.getEmail());
-        dto.setRole(user.getRole());
-        dto.setStreet(user.getStreet());
-        dto.setCity(user.getCity());
-        dto.setZip(user.getZip());
-        dto.setCountry(user.getCountry());
-        return dto;
-    }
 }
