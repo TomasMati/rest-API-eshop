@@ -10,3 +10,8 @@ node_modules/
 dist/
 .env
 .DS_Store
+CHEATSHEET.md
+start_eshop.bat
+data/
+uploads/
+.vite/
