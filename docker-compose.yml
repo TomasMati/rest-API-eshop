@@ -1,0 +1,51 @@
+services:
+  backend:
+    build: ./backend
+    container_name: eshop-backend
+    ports:
+      - "8081:8081"
+    volumes:
+      - ./backend/data:/app/data
+      - ./backend/uploads:/app/uploads
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/eshopdb
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=org.postgresql.Driver
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.PostgreSQLDialect
+    depends_on:
+      - postgres
+    networks:
+      - eshop-network
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: eshop-postgres
+    environment:
+      - POSTGRES_DB=eshopdb
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - eshop-network
+
+  frontend:
+    build: ./frontend
+    container_name: eshop-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - eshop-network
+
+networks:
+  eshop-network:
+    driver: bridge
+
+volumes:
+  postgres-data:

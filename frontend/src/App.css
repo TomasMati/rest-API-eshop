@@ -1,0 +1,6 @@
+/* App specific styles can go here if needed, keeping it clean for now */
+.app-container {
+  min-height: 100vh;
+  padding-top: 80px;
+  /* Space for fixed navbar */
+}
