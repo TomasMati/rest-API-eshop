@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,13 +16,14 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.hamcrest.Matchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
-class OrderControllerValidationTest {
+class OrderControllerIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -29,14 +31,17 @@ class OrderControllerValidationTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private com.eshop.repository.OrderRepository orderRepository;
+
     private Order createValidOrder() {
         Order order = new Order();
         order.setCustomerName("Jan Novak");
         order.setEmail("jan@novak.sk");
-        order.setPhone("+421944123456"); // Valid
+        order.setPhone("+421944123456");
         order.setStreet("Hlavna 1");
         order.setCity("Kosice");
-        order.setZip("040 01"); // Valid
+        order.setZip("040 01");
         order.setCountry("Slovensko");
         order.setShippingMethod("Kurier");
         order.setPaymentMethod("Karta");
@@ -45,9 +50,6 @@ class OrderControllerValidationTest {
         order.setStatus("PENDING");
 
         List<OrderItem> items = new ArrayList<>();
-        // Items are not strictly validated by @Valid itself unless @Valid is on the
-        // list,
-        // but let's add one for realism
         order.setItems(items);
         return order;
     }
@@ -59,13 +61,48 @@ class OrderControllerValidationTest {
         mockMvc.perform(post("/api/orders")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(order)))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.customerName", is("Jan Novak")))
+                .andExpect(jsonPath("$.status", is("PENDING")));
+    }
+
+    @Test
+    @WithMockUser
+    void shouldGetOrderById() throws Exception {
+        Order savedOrder = orderRepository.save(createValidOrder());
+
+        mockMvc.perform(get("/api/orders/" + savedOrder.getId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(savedOrder.getId().intValue())))
+                .andExpect(jsonPath("$.customerName", is("Jan Novak")));
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    void shouldUpdateOrderStatusAsAdmin() throws Exception {
+        Order savedOrder = orderRepository.save(createValidOrder());
+
+        mockMvc.perform(put("/api/orders/" + savedOrder.getId() + "/status")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"status\": \"SHIPPED\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status", is("SHIPPED")));
+    }
+
+    @Test
+    void shouldFailUpdateOrderStatusWithoutAdmin() throws Exception {
+        Order savedOrder = orderRepository.save(createValidOrder());
+
+        mockMvc.perform(put("/api/orders/" + savedOrder.getId() + "/status")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"status\": \"SHIPPED\"}"))
+                .andExpect(status().isForbidden());
     }
 
     @Test
     void shouldFailOrderWithInvalidEmail() throws Exception {
         Order order = createValidOrder();
-        order.setEmail("not-email"); // Invalid
+        order.setEmail("not-email");
 
         mockMvc.perform(post("/api/orders")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -76,7 +113,7 @@ class OrderControllerValidationTest {
     @Test
     void shouldFailOrderWithInvalidPhone() throws Exception {
         Order order = createValidOrder();
-        order.setPhone("123"); // Too short, regex expects 9-15
+        order.setPhone("123");
 
         mockMvc.perform(post("/api/orders")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -87,7 +124,7 @@ class OrderControllerValidationTest {
     @Test
     void shouldFailOrderWithInvalidZip() throws Exception {
         Order order = createValidOrder();
-        order.setZip("123456"); // No space, or too long maybe? Regex is pretty strict: ^\d{3}\s?\d{2}$
+        order.setZip("123456");
 
         mockMvc.perform(post("/api/orders")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -98,7 +135,7 @@ class OrderControllerValidationTest {
     @Test
     void shouldFailOrderWithMissingRequiredField() throws Exception {
         Order order = createValidOrder();
-        order.setCustomerName(null); // @NotBlank
+        order.setCustomerName(null);
 
         mockMvc.perform(post("/api/orders")
                 .contentType(MediaType.APPLICATION_JSON)
