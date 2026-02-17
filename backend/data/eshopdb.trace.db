@@ -142,3 +142,75 @@ org.h2.jdbc.JdbcSQLNonTransientException: The object is already closed [90007-22
 org.h2.jdbc.JdbcSQLNonTransientException: The object is already closed [90007-224]
 2025-12-15 19:23:27.463195Z jdbc[3]: exception
 org.h2.jdbc.JdbcSQLNonTransientException: The object is already closed [90007-224]
+2025-12-30 15:37:09.105938+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLNonTransientException: Objekt už je zatvorený
+The object is already closed [90007-224]
+2025-12-30 15:37:09.253294+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLNonTransientException: Objekt už je zatvorený
+The object is already closed [90007-224]
+2025-12-30 15:37:09.355731+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLNonTransientException: Objekt už je zatvorený
+The object is already closed [90007-224]
+2025-12-30 15:37:09.377424+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLNonTransientException: Objekt už je zatvorený
+The object is already closed [90007-224]
+2025-12-30 15:37:09.459759+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLNonTransientException: Objekt už je zatvorený
+The object is already closed [90007-224]
+2025-12-30 15:37:09.620439+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLNonTransientException: Objekt už je zatvorený
+The object is already closed [90007-224]
+2025-12-30 15:37:09.657469+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLNonTransientException: Objekt už je zatvorený
+The object is already closed [90007-224]
+2025-12-30 15:37:09.659469+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLNonTransientException: Objekt už je zatvorený
+The object is already closed [90007-224]
+2025-12-30 15:38:55.608205+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLNonTransientException: Objekt už je zatvorený
+The object is already closed [90007-224]
+2025-12-30 15:38:55.703514+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLNonTransientException: Objekt už je zatvorený
+The object is already closed [90007-224]
+2025-12-30 15:38:55.779315+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLNonTransientException: Objekt už je zatvorený
+The object is already closed [90007-224]
+2025-12-30 15:38:55.794011+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLNonTransientException: Objekt už je zatvorený
+The object is already closed [90007-224]
+2025-12-30 15:38:55.839448+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLNonTransientException: Objekt už je zatvorený
+The object is already closed [90007-224]
+2025-12-30 15:38:55.969315+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLNonTransientException: Objekt už je zatvorený
+The object is already closed [90007-224]
+2025-12-30 15:38:55.997384+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLNonTransientException: Objekt už je zatvorený
+The object is already closed [90007-224]
+2025-12-30 15:38:56.000530+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLNonTransientException: Objekt už je zatvorený
+The object is already closed [90007-224]
+2026-02-12 22:43:41.741718+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLNonTransientException: Objekt už je zatvorený
+The object is already closed [90007-224]
+2026-02-12 22:43:41.844401+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLNonTransientException: Objekt už je zatvorený
+The object is already closed [90007-224]
+2026-02-12 22:43:41.905569+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLNonTransientException: Objekt už je zatvorený
+The object is already closed [90007-224]
+2026-02-12 22:43:41.920958+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLNonTransientException: Objekt už je zatvorený
+The object is already closed [90007-224]
+2026-02-12 22:44:50.052370+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLNonTransientException: Objekt už je zatvorený
+The object is already closed [90007-224]
+2026-02-12 22:44:50.159974+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLNonTransientException: Objekt už je zatvorený
+The object is already closed [90007-224]
+2026-02-12 22:44:50.225601+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLNonTransientException: Objekt už je zatvorený
+The object is already closed [90007-224]
+2026-02-12 22:44:50.237758+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLNonTransientException: Objekt už je zatvorený
+The object is already closed [90007-224]

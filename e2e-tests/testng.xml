@@ -1,0 +1,10 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="React E-shop E2E Suite">
+    <test name="Authentication and Purchase Tests">
+        <classes>
+            <class name="sk.eshop.tests.login.LoginTest"/>
+            <class name="sk.eshop.tests.registration.RegistrationTest"/>
+            <class name="sk.eshop.tests.FullFlowTest"/>
+        </classes>
+    </test>
+</suite>

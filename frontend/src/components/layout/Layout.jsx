@@ -4,15 +4,7 @@ import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import './Layout.css';
 
-// Note: Sidebar state might need to be lifted to App or Context if filtering 
-// affects the main view which is routed. 
-// For this simple implementation, we'll pass props through if Layout was wrapping everything directly, 
-// but since we usually use <Outlet>, the page inside needs to communicate.
-// For now, let's keep the Sidebar visual here, but we might need to adjust where it sits 
-// relative to the Route. 
-// Actually, it's better if the Layout just provides the structure and the Sidebar 
-// is either smart (Url parameters) or controlled by the specific page context.
-// Let's assume URL params or simple state for this "frontend only" task.
+
 
 const Layout = ({ children }) => {
     return (

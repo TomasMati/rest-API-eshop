@@ -60,7 +60,7 @@ const Navbar = () => {
             <Link to="/" className="navbar-logo" onClick={() => {
                 // Reset search when clicking logo
                 const { resetSearch } = useData();
-                // Note: We can't use hook inside callback, need to pull it up
+
             }}>
                 ReactShop
             </Link>

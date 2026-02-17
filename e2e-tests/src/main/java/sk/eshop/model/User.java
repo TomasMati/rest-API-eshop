@@ -1,4 +1,4 @@
-package model;
+package sk.eshop.model;
 
 public class User
 {
